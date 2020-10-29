@@ -1,16 +1,30 @@
 <script lang="ts">
-  import { gameStage, questionSet } from "../stores";
+  import { questionSet } from "../stores";
   import MainMenu from "./MainMenu.svelte";
   import InGame from "./InGame.svelte";
   import PostGame from "./PostGame.svelte";
   import { onMount } from "svelte";
+  import type { Question } from "../types";
 
   onMount(async () => {
     const res = await fetch("https://jsonplaceholder.typicode.com/todos/1");
     $questionSet = await res.json();
   });
 
-  let selectedQuestions;
+  type GameStage = "MAIN-MENU" | "IN-GAME" | "POST-GAME";
+  let gameStage: GameStage = "MAIN-MENU";
+
+  let selectedQuestions: Question[];
+  let result;
+
+  const startGame = ({ detail }) => {
+    selectedQuestions = detail.selectedQuestions;
+    gameStage = "IN-GAME";
+  };
+  const endGame = ({ detail }) => {
+    result = detail;
+    gameStage = "POST-GAME";
+  };
 </script>
 
 <style>
@@ -36,11 +50,11 @@
 </style>
 
 <main>
-  {#if $gameStage === 'IN-GAME'}
-    <InGame {selectedQuestions} />
-  {:else if $gameStage === 'POST-GAME'}
-    <PostGame />
+  {#if gameStage === 'IN-GAME'}
+    <InGame {selectedQuestions} on:endGame={endGame} />
+  {:else if gameStage === 'POST-GAME'}
+    <PostGame {result} />
   {:else}
-    <MainMenu bind:selectedQuestions />
+    <MainMenu on:startGame={startGame} />
   {/if}
 </main>

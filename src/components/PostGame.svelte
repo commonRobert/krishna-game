@@ -1,5 +1,5 @@
-<script>
+<script lang="ts">
+  export let result;
 </script>
 
-<style>
-</style>
+<pre>{result.win ? 'you won' : 'you lost'}</pre>
