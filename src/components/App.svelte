@@ -5,9 +5,10 @@
   import PostGame from "./PostGame.svelte";
   import { onMount } from "svelte";
   import type { Question } from "../types";
+  import { sheetURL } from "../googleSheets";
 
   onMount(async () => {
-    const res = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+    const res = await fetch(sheetURL);
     $questionSet = await res.json();
   });
 
