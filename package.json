@@ -1,11 +1,13 @@
 {
   "name": "svelte-app",
   "version": "1.0.0",
+  "homepage": "https://commonrobert.github.io/krishna-game/",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public",
-    "validate": "svelte-check"
+    "validate": "svelte-check",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d public"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^16.0.0",
@@ -23,6 +25,6 @@
     "@tsconfig/svelte": "^1.0.10"
   },
   "dependencies": {
-    "sirv-cli": "^1.0.8"
+    "gh-pages": "^3.1.0"
   }
 }
