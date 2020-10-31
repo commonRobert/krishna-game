@@ -1,5 +1,4 @@
 import { Writable, writable } from "svelte/store";
+import type { QuestionSet, Question } from "./questions";
 
-type QuestionSet = {};
-
-export const questionSet: Writable<QuestionSet> = writable(null);
+export const questionSets: Writable<{ [k in QuestionSet]: Question[] }> = writable(null);

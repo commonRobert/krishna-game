@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Question } from "../types";
+  import type { Question } from "../questions";
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
@@ -38,6 +38,6 @@
 <div>
   <pre>{currentQuestionNumber++ + ': ' + currentQuestion.questionText}</pre>
   {#each currentQuestion.answerChoices as choice}
-    <button on:click={handleChoice} id="choice-{choice.id}">{choice.text}</button>
+    <button on:click={handleChoice} id="choice-{choice.id}">{choice.value}</button>
   {/each}
 </div>

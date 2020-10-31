@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let result;
+  export let gameResult;
 </script>
 
-<pre>{result.win ? 'you won' : 'you lost'}</pre>
+<pre>{gameResult.win ? 'you won' : 'you lost'}</pre>

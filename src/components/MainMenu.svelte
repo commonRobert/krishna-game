@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { questionSet } from "../stores";
-  import { question } from "../placeholders";
+  import { questionSets } from "../stores";
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
 
-  $: questionsReady = Boolean($questionSet);
+  $: questionsReady = Boolean($questionSets?.default);
 
   const startGame = () =>
     dispatch("startGame", {
-      selectedQuestions: [question, question],
+      selectedQuestionSet: "default",
     });
 </script>
 

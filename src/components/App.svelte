@@ -1,29 +1,30 @@
 <script lang="ts">
-  import { questionSet } from "../stores";
+  import { questionSets } from "../stores";
   import MainMenu from "./MainMenu.svelte";
   import InGame from "./InGame.svelte";
   import PostGame from "./PostGame.svelte";
   import { onMount } from "svelte";
-  import type { Question } from "../types";
-  import { sheetURL } from "../googleSheets";
+  import { parseQuestions, fetchSheetRange, questionRanges } from "../questions";
+  import type { Question } from "../questions";
 
   onMount(async () => {
-    const res = await fetch(sheetURL);
-    $questionSet = await res.json();
+    const rawQuestions = await fetchSheetRange(questionRanges.default);
+    $questionSets = { default: parseQuestions(rawQuestions) };
+    console.log($questionSets);
   });
 
   type GameStage = "MAIN-MENU" | "IN-GAME" | "POST-GAME";
   let gameStage: GameStage = "MAIN-MENU";
 
   let selectedQuestions: Question[];
-  let result;
+  let gameResult;
 
   const startGame = ({ detail }) => {
-    selectedQuestions = detail.selectedQuestions;
+    selectedQuestions = $questionSets[detail.selectedQuestionSet];
     gameStage = "IN-GAME";
   };
   const endGame = ({ detail }) => {
-    result = detail;
+    gameResult = detail;
     gameStage = "POST-GAME";
   };
 </script>
@@ -54,7 +55,7 @@
   {#if gameStage === 'IN-GAME'}
     <InGame {selectedQuestions} on:endGame={endGame} />
   {:else if gameStage === 'POST-GAME'}
-    <PostGame {result} />
+    <PostGame {gameResult} />
   {:else}
     <MainMenu on:startGame={startGame} />
   {/if}
