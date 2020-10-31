@@ -6,15 +6,6 @@ const spreadsheetId = "1bKQJpX9-sXuFIKyquUp30cLYGhPtmvnQPQn9jzWidEY";
 const reqUrl = (cellRange) =>
   `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${cellRange}?key=${API_KEY}`;
 
-export const questionRanges = {
-  default: "БГ 1-6!A2:H3",
-};
-
-export const fetchSheetRange = async (range) => {
-  const res = await fetch(reqUrl(range));
-  return await res.json();
-};
-
 const sheetColumns = Object.entries({
   difficulty: 0,
   questionText: 1,
@@ -23,7 +14,7 @@ const sheetColumns = Object.entries({
   comment: 7,
 });
 
-export const parseQuestions = (sheetData) =>
+const parseQuestions = (sheetData) =>
   sheetData.values.map((row) =>
     sheetColumns.reduce((acc, [key, rowIndex]) => ({
       ...acc,
@@ -33,6 +24,15 @@ export const parseQuestions = (sheetData) =>
           : rowIndex.map((rowIndex, index) => ({ id: index + 1, value: row[rowIndex] })),
     }))
   );
+
+export const fetchQuestions = async (range) => {
+  const res = await fetch(reqUrl(range));
+  return parseQuestions(await res.json());
+};
+
+export const questionRanges = {
+  default: "БГ 1-6!A2:H3",
+};
 
 export type Question = {
   id: number;

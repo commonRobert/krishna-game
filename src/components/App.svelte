@@ -4,12 +4,11 @@
   import InGame from "./InGame.svelte";
   import PostGame from "./PostGame.svelte";
   import { onMount } from "svelte";
-  import { parseQuestions, fetchSheetRange, questionRanges } from "../questions";
+  import { fetchQuestions, questionRanges } from "../questions";
   import type { Question } from "../questions";
 
   onMount(async () => {
-    const rawQuestions = await fetchSheetRange(questionRanges.default);
-    $questionSets = { default: parseQuestions(rawQuestions) };
+    $questionSets = { default: await fetchQuestions(questionRanges.default) };
     console.log($questionSets);
   });
 
