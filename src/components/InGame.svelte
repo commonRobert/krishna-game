@@ -6,26 +6,29 @@
 
   export let selectedQuestions: Question[];
 
-  let currentQuestion = selectedQuestions.shift();
   let currentQuestionNumber = 1;
+  let currentQuestion = selectedQuestions[0];
+  console.log(selectedQuestions);
 
   const handleChoice = (e) => {
     if (`choice-${currentQuestion.correctAnswerId}` !== e.target.id) {
       dispatch("endGame", {
         win: false,
-        currentQuestion,
+        failedQuestion: currentQuestion,
+        questionNumber: currentQuestionNumber,
       });
       return;
     }
 
-    if (0 === selectedQuestions.length) {
+    if (currentQuestionNumber === selectedQuestions.length) {
       dispatch("endGame", {
         win: true,
       });
       return;
     }
 
-    currentQuestion = selectedQuestions.shift();
+    currentQuestion = selectedQuestions[currentQuestionNumber];
+    currentQuestionNumber += 1;
   };
 </script>
 
@@ -36,8 +39,11 @@
 </style>
 
 <div>
-  <pre>{currentQuestionNumber++ + ': ' + currentQuestion.questionText}</pre>
+  <pre>Вопрос #{currentQuestionNumber}</pre>
+  <pre>{currentQuestion.questionText}</pre>
   {#each currentQuestion.answerChoices as choice}
-    <button on:click={handleChoice} id="choice-{choice.id}">{choice.value}</button>
+    <button
+      on:click={handleChoice}
+      id="choice-{choice.id}">{choice.value}</button>
   {/each}
 </div>
