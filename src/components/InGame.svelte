@@ -47,15 +47,9 @@
   <pre>Вопрос #{currentQuestionNumber}</pre>
   <pre>{currentQuestion.questionText}</pre>
   {#each currentQuestion.answerChoices as choice}
-    <button
-      on:click={handleChoice}
-      id="choice-{choice.id}">{choice.value}</button>
+    <button on:click={handleChoice} id="choice-{choice.id}">{choice.value}</button>
   {/each}
   <Countdown
     bind:value={timerValue}
-    on:commenced={() => endGame({
-        win: false,
-        failedQuestion: currentQuestion,
-        questionNumber: currentQuestionNumber,
-      })} />
+    on:runOut={() => endGame({ win: false, failedQuestion: currentQuestion, questionNumber: currentQuestionNumber })} />
 </div>
