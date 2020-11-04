@@ -4,7 +4,7 @@
   const dispatch = createEventDispatcher();
 
   export let value;
-  export let tickMillis = 1000 - 17;
+  export let tickMillis = 1000;
   export let blinkAt = 5;
 
   // value -= 1; while this is commented we're doing one extra tick
