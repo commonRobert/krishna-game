@@ -4,12 +4,18 @@
   import InGame from "./InGame.svelte";
   import PostGame from "./PostGame.svelte";
   import { onMount } from "svelte";
-  import { fetchQuestions, selectQuestionsForGame } from "../questions";
-  import type { Question } from "../questions";
+  import { selectQuestionsForGame, Question } from "../questions";
+  import { fetchQuestions } from "../spreadsheetApi";
+
+  const defaultQuestionSet = "БГ 1-6";
 
   onMount(async () => {
     $questionSets = {
-      default: selectQuestionsForGame(await fetchQuestions("БГ 1-6"), 8, []),
+      default: selectQuestionsForGame(
+        await fetchQuestions(defaultQuestionSet),
+        8,
+        []
+      ),
     };
   });
 
@@ -20,7 +26,7 @@
   let gameResult;
 
   const startGame = ({ detail }) => {
-    selectedQuestions = $questionSets[detail?.selectedQuestionSet || "default"];
+    selectedQuestions = $questionSets[defaultQuestionSet];
     gameStage = "IN-GAME";
   };
   const endGame = ({ detail }) => {

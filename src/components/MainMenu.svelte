@@ -8,7 +8,7 @@
 
   const startGame = () =>
     dispatch("startGame", {
-      selectedQuestionSet: "default",
+      // selectedQuestionSet: "default",
     });
 </script>
 
