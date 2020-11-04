@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher, onDestroy } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -15,16 +15,16 @@
     value -= 1;
   };
 
-  const interval = setInterval(tick, tickMillis);
-  onDestroy(() => {
-    clearInterval(interval);
+  onMount(() => {
+    const interval = setInterval(tick, tickMillis);
+    return () => clearInterval(interval);
   });
 </script>
 
 <style>
   .blinking {
     color: red;
-    animation: blinker 0.8s linear infinite;
+    animation: blinker 0.75s linear infinite;
   }
   @keyframes blinker {
     50% {
