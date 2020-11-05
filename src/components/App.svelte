@@ -13,11 +13,7 @@
 
   onMount(async () => {
     $questionSets = {
-      default: selectQuestionsForGame(
-        await fetchQuestions(defaultSheet),
-        questionsInGame,
-        []
-      ),
+      default: selectQuestionsForGame(await fetchQuestions(defaultSheet), questionsInGame, []),
     };
   });
 

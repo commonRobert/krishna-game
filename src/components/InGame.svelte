@@ -10,12 +10,12 @@
 
   let currentQuestionNumber = 1;
   let currentQuestion = selectedQuestions[0];
-  let timerValue = timeToSelectAnswer;
+  let timer;
 
   const nextQuestion = () => {
     currentQuestion = selectedQuestions[currentQuestionNumber];
     currentQuestionNumber += 1;
-    timerValue = timeToSelectAnswer;
+    timer.reset(timeToSelectAnswer);
   };
 
   const endGame = (details) => dispatch("endGame", details);
@@ -50,6 +50,7 @@
     <button on:click={handleChoice} id="choice-{choice.id}">{choice.value}</button>
   {/each}
   <Countdown
-    bind:value={timerValue}
+    value={timeToSelectAnswer}
+    bind:this={timer}
     on:runOut={() => endGame({ win: false, failedQuestion: currentQuestion, questionNumber: currentQuestionNumber })} />
 </div>

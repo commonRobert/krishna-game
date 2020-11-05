@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { afterUpdate, beforeUpdate, createEventDispatcher, onDestroy } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -8,16 +8,22 @@
   export let blinkAt = 5;
   export let stopAt = 1;
 
+  export const reset = (newValue) => {
+    clearInterval(interval);
+    value = newValue;
+    interval = setInterval(tick, tickMillis);
+  };
+
   const tick = () => {
     if (value === stopAt) return dispatch("runOut");
     value -= 1;
   };
 
-  // I used the following logic instead of an interval to properly reset the timeout when the a new value is passed from the outside.
-  let timeout;
-  afterUpdate(() => (timeout = setTimeout(tick, tickMillis)));
-  beforeUpdate(() => clearTimeout(timeout));
-  onDestroy(() => clearTimeout(timeout));
+  let interval;
+  onMount(() => {
+    interval = setInterval(tick, tickMillis);
+    return () => clearInterval(interval);
+  });
 </script>
 
 <style>
