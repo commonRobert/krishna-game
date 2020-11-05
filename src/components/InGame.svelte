@@ -53,4 +53,5 @@
     value={timeToSelectAnswer}
     bind:this={timer}
     on:runOut={() => endGame({ win: false, failedQuestion: currentQuestion, questionNumber: currentQuestionNumber })} />
+  <!-- TODO: handle time running more nicely -->
 </div>
