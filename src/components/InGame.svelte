@@ -20,18 +20,16 @@
 
   const endGame = (details) => dispatch("endGame", details);
 
-  const handleChoice = (e) => {
-    if (`choice-${currentQuestion.correctAnswerId}` !== e.target.id)
-      return endGame({
-        win: false,
-        failedQuestion: currentQuestion,
-        questionNumber: currentQuestionNumber,
-      });
+  const outcomes = {
+    WIN: { win: true },
+    INCORRECT_ANSWER: { win: false, failedQuestion: currentQuestion, questionNumber: currentQuestionNumber },
+    TIME_EXPIRED: { win: false, failedQuestion: currentQuestion, questionNumber: currentQuestionNumber },
+  };
 
-    if (currentQuestionNumber === selectedQuestions.length)
-      return endGame({
-        win: true,
-      });
+  const handleChoice = (e) => {
+    if (`choice-${currentQuestion.correctAnswerId}` !== e.target.id) return endGame(outcomes.INCORRECT_ANSWER);
+
+    if (currentQuestionNumber === selectedQuestions.length) return endGame(outcomes.WIN);
 
     nextQuestion();
   };
@@ -49,9 +47,5 @@
   {#each currentQuestion.answerChoices as choice}
     <button on:click={handleChoice} id="choice-{choice.id}">{choice.value}</button>
   {/each}
-  <Countdown
-    value={timeToSelectAnswer}
-    bind:this={timer}
-    on:runOut={() => endGame({ win: false, failedQuestion: currentQuestion, questionNumber: currentQuestionNumber })} />
-  <!-- TODO: handle time running more nicely -->
+  <Countdown value={timeToSelectAnswer} bind:this={timer} on:expire={() => endGame(outcomes.TIME_EXPIRED)} />
 </div>
