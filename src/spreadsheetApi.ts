@@ -18,33 +18,31 @@ const sheetColumns = {
 };
 
 const latinAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const firstColumnName =
-  latinAlphabet[Math.min(...Object.values(sheetColumns).flat())];
-const lastColumnName =
-  latinAlphabet[Math.max(...Object.values(sheetColumns).flat())];
+const firstColumnName = latinAlphabet[Math.min(...Object.values(sheetColumns).flat())];
+const lastColumnName = latinAlphabet[Math.max(...Object.values(sheetColumns).flat())];
 
 const makeCellRange = (sheetName, numberOfQuestions, startRow = 2) =>
-  `${sheetName}!${firstColumnName}${startRow}:${lastColumnName}${
-    startRow + numberOfQuestions
-  }`;
+  `${sheetName}!${firstColumnName}${startRow}:${lastColumnName}${startRow + numberOfQuestions}`;
 
 // Should it be here, or on the questions file?
 const parseQuestions = (sheetData): Question[] =>
-  sheetData.values.map((question, questionIndex) =>
-    Object.entries(sheetColumns).reduce(
-      (acc, [colName, colIndex]) => {
-        acc[colName] =
-          typeof colIndex === "number"
-            ? question[colIndex]
-            : colIndex.map((subColIndex, choiceIndex) => ({
-                id: choiceIndex + 1,
-                value: question[subColIndex],
-              }));
-        return acc;
-      },
-      { id: questionIndex + 1 }
-    )
-  );
+  sheetData.values
+    .filter((row) => row.length >= 7) // TODO: Refactor this check -- the number is hardcoded, and it's unclear that the comment is optional
+    .map((question, questionIndex) =>
+      Object.entries(sheetColumns).reduce(
+        (acc, [colName, colIndex]) => {
+          acc[colName] =
+            typeof colIndex === "number"
+              ? question[colIndex]
+              : colIndex.map((subColIndex, choiceIndex) => ({
+                  id: choiceIndex + 1,
+                  value: question[subColIndex],
+                }));
+          return acc;
+        },
+        { id: questionIndex + 1 }
+      )
+    );
 
 export const fetchQuestions = async (sheetName, numberOfQuestions = 999) => {
   const res = await fetch(reqUrl(makeCellRange(sheetName, numberOfQuestions)));
