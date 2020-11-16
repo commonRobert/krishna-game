@@ -6,18 +6,23 @@
   export let value;
   export let tickMillis = 1000;
   export let blinkAt = 5;
+  export let stopAt = 1;
 
-  // value -= 1; while this is commented we're doing one extra tick
+  export const reset = (newValue) => {
+    clearInterval(interval);
+    value = newValue;
+    interval = setInterval(tick, tickMillis);
+  };
 
   const tick = () => {
-    if (value === 0) return dispatch("commenced");
-
+    if (value === stopAt) return dispatch("expire");
     value -= 1;
   };
 
   // TODO: Why does it carry over the ticking interval when the component is rerendered?
+  let interval;
   onMount(() => {
-    const interval = setInterval(tick, tickMillis);
+    interval = setInterval(tick, tickMillis);
     return () => clearInterval(interval);
   });
 </script>

@@ -1,3 +1,5 @@
+import { randomElement } from "./util";
+
 export type Question = {
   id: number;
   questionText: string;
@@ -30,9 +32,7 @@ export const selectQuestionsForGame: (
 
   if (selection.length < gameLength) {
     selection = selection
-      .concat(
-        balancedSelection(sortedPool.played, gameLength - selection.length)
-      )
+      .concat(balancedSelection(sortedPool.played, gameLength - selection.length))
       .sort((q1, q2) => q1.difficulty - q2.difficulty);
   }
 
@@ -65,6 +65,3 @@ const balancedSelection = <T>(pool: T[], selectionLength: number): T[] => {
 
   return selection;
 };
-
-const randomElement = <T>(arr: T[]): T =>
-  arr[Math.floor(Math.random() * arr.length)];
