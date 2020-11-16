@@ -16,8 +16,8 @@
   // for fifty-fifty
   let choiceActive = {
     1: true,
-    3: true,
     2: true,
+    3: true,
     4: true,
   };
 
@@ -29,7 +29,7 @@
 
   let helpOptions = {
     fiftyFifty: HelperOption("50/50", () => {
-      const incorrectChoices = Object.keys(currentQuestion.answerChoices).filter(
+      const incorrectChoices = Object.keys(choiceActive).filter(
         (choiceId) => choiceId !== currentQuestion.correctAnswerId.toString()
       );
       const choiceToLeave = randomElement(incorrectChoices);
@@ -43,8 +43,8 @@
       nextQuestion = () => {
         choiceActive = {
           1: true,
-          3: true,
           2: true,
+          3: true,
           4: true,
         };
         _nextQuestion();
@@ -69,10 +69,18 @@
         details = { win: true };
         break;
       case Outcomes.INCORRECT_ANSWER:
-        details = { win: false, failedQuestion: currentQuestion, questionNumber: currentQuestionNumber };
+        details = {
+          win: false,
+          failedQuestion: currentQuestion,
+          questionNumber: currentQuestionNumber,
+        };
         break;
       case Outcomes.TIME_EXPIRED:
-        details = { win: false, failedQuestion: currentQuestion, questionNumber: currentQuestionNumber };
+        details = {
+          win: false,
+          failedQuestion: currentQuestion,
+          questionNumber: currentQuestionNumber,
+        };
         break;
     }
 
@@ -86,9 +94,11 @@
   }
 
   const handleChoice = (e) => {
-    if (`choice-${currentQuestion.correctAnswerId}` !== e.target.id) return endGame(Outcomes.INCORRECT_ANSWER);
+    if (`choice-${currentQuestion.correctAnswerId}` !== e.target.id)
+      return endGame(Outcomes.INCORRECT_ANSWER);
 
-    if (currentQuestionNumber === selectedQuestions.length) return endGame(Outcomes.WIN);
+    if (currentQuestionNumber === selectedQuestions.length)
+      return endGame(Outcomes.WIN);
 
     nextQuestion();
   };
@@ -104,11 +114,20 @@
   <pre>Вопрос #{currentQuestionNumber}</pre>
   <pre>{currentQuestion.questionText}</pre>
   {#each currentQuestion.answerChoices as choice}
-    <button on:click={handleChoice} id="choice-{choice.id}" disabled={!choiceActive[choice.id]}>{choice.value}</button>
+    <button
+      on:click={handleChoice}
+      id="choice-{choice.id}"
+      disabled={!choiceActive[choice.id]}>{choice.value}</button>
   {/each}
-  <Countdown value={timeToSelectAnswer} bind:this={timer} on:expire={() => endGame(Outcomes.TIME_EXPIRED)} />
+  <Countdown
+    value={timeToSelectAnswer}
+    bind:this={timer}
+    on:expire={() => endGame(Outcomes.TIME_EXPIRED)} />
   <hr />
   {#each Object.entries(helpOptions) as [key, { available, handler, displayName }]}
-    <button on:click={handler} disabled={!available} id={key}>{displayName}</button>
+    <button
+      on:click={handler}
+      disabled={!available}
+      id={key}>{displayName}</button>
   {/each}
 </div>

@@ -19,6 +19,7 @@
     value -= 1;
   };
 
+  // TODO: Why does it carry over the ticking interval when the component is rerendered?
   let interval;
   onMount(() => {
     interval = setInterval(tick, tickMillis);
