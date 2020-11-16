@@ -9,35 +9,30 @@ const testSpreadsheetId = "1Q9ahcYfATyr3JQXze1ogHaOBJJLajnTRf5UpHuM8tPA"; // TES
 const reqUrl = (range, spreadsheetId = prodSpreadsheetId) =>
   `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${API_KEY}`;
 
-const sheetColumns = {
+const sheetColumns: { [k in keyof Partial<Question>]: number | number[] } = {
   difficulty: 0,
   questionText: 1,
-  answerChoices: [2, 3, 4, 5],
-  correctAnswerId: 6,
-  comment: 7,
+  correctAnswer: 2,
+  incorrectOptions: [3, 4, 5],
+  comment: 6,
 };
+const columnIndexes = Object.values(sheetColumns).flat();
 
 const latinAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const firstColumnName = latinAlphabet[Math.min(...Object.values(sheetColumns).flat())];
-const lastColumnName = latinAlphabet[Math.max(...Object.values(sheetColumns).flat())];
+const firstColumnName = latinAlphabet[Math.min(...columnIndexes)];
+const lastColumnName = latinAlphabet[Math.max(...columnIndexes)];
 
 const makeCellRange = (sheetName, numberOfQuestions, startRow = 2) =>
   `${sheetName}!${firstColumnName}${startRow}:${lastColumnName}${startRow + numberOfQuestions}`;
 
-// Should it be here, or on the questions file?
 const parseQuestions = (sheetData): Question[] =>
   sheetData.values
-    .filter((row) => row.length >= 7) // TODO: Refactor this check -- the number is hardcoded, and it's unclear that the comment is optional
+    .filter((row) => row.length >= Math.max(...columnIndexes)) // The the comment is optional
     .map((question, questionIndex) =>
       Object.entries(sheetColumns).reduce(
         (acc, [colName, colIndex]) => {
           acc[colName] =
-            typeof colIndex === "number"
-              ? question[colIndex]
-              : colIndex.map((subColIndex, choiceIndex) => ({
-                  id: choiceIndex + 1,
-                  value: question[subColIndex],
-                }));
+            typeof colIndex === "number" ? question[colIndex] : colIndex.map((subColIndex) => question[subColIndex]);
           return acc;
         },
         { id: questionIndex + 1 }

@@ -3,7 +3,7 @@
   import { createEventDispatcher } from "svelte";
   import { timeToSelectAnswer } from "../gameSettings";
   import Countdown from "./Countdown.svelte";
-  import { randomElement } from "../util";
+  import { randomElement, shuffle } from "../util";
 
   const dispatch = createEventDispatcher();
 
@@ -13,46 +13,38 @@
   let currentQuestion = selectedQuestions[0];
   let timer;
 
-  // for fifty-fifty
-  let choiceActive = {
-    1: true,
-    2: true,
-    3: true,
-    4: true,
-  };
-
   const HelperOption = (displayName, handler) => ({
     displayName,
     handler,
     available: true,
   });
 
+  // TODO: probably should refactor
   let helpOptions = {
-    fiftyFifty: HelperOption("50/50", () => {
-      const incorrectChoices = Object.keys(choiceActive).filter(
-        (choiceId) => choiceId !== currentQuestion.correctAnswerId.toString()
-      );
-      const choiceToLeave = randomElement(incorrectChoices);
-
-      incorrectChoices.forEach((choiceId) => {
-        if (choiceId !== choiceToLeave) choiceActive[choiceId] = false;
-      });
-
-      // TODO: kek?
-      const _nextQuestion = nextQuestion;
-      nextQuestion = () => {
-        choiceActive = {
-          1: true,
-          2: true,
-          3: true,
-          4: true,
-        };
-        _nextQuestion();
-        nextQuestion = _nextQuestion;
-      };
-
-      helpOptions.fiftyFifty.available = false;
-    }),
+    // fiftyFifty: HelperOption("50/50", () => {
+    // const incorrectChoices = Object.keys(choiceActive).filter(
+    //   (choiceId) =>
+    //     currentQuestion.answerChoices.find(({ id }) => id.toString() === choiceId).value !==
+    //     currentQuestion.correctAnswer
+    // );
+    // const choiceToLeave = randomElement(incorrectChoices);
+    // incorrectChoices.forEach((choiceId) => {
+    //   if (choiceId !== choiceToLeave) choiceActive[choiceId] = false;
+    // });
+    // // TODO: kek?
+    // const _nextQuestion = nextQuestion;
+    // nextQuestion = () => {
+    //   choiceActive = {
+    //     1: true,
+    //     2: true,
+    //     3: true,
+    //     4: true,
+    //   };
+    //   _nextQuestion();
+    //   nextQuestion = _nextQuestion;
+    // };
+    // helpOptions.fiftyFifty.available = false;
+    // }),
   };
 
   let nextQuestion = () => {
@@ -94,11 +86,8 @@
   }
 
   const handleChoice = (e) => {
-    if (`choice-${currentQuestion.correctAnswerId}` !== e.target.id)
-      return endGame(Outcomes.INCORRECT_ANSWER);
-
-    if (currentQuestionNumber === selectedQuestions.length)
-      return endGame(Outcomes.WIN);
+    if (currentQuestion.correctAnswer !== e.target.textContent) return endGame(Outcomes.INCORRECT_ANSWER);
+    if (currentQuestionNumber === selectedQuestions.length) return endGame(Outcomes.WIN);
 
     nextQuestion();
   };
@@ -113,21 +102,12 @@
 <div>
   <pre>Вопрос #{currentQuestionNumber}</pre>
   <pre>{currentQuestion.questionText}</pre>
-  {#each currentQuestion.answerChoices as choice}
-    <button
-      on:click={handleChoice}
-      id="choice-{choice.id}"
-      disabled={!choiceActive[choice.id]}>{choice.value}</button>
+  {#each shuffle([...currentQuestion.incorrectOptions, currentQuestion.correctAnswer]) as choice}
+    <button on:click={handleChoice}>{choice}</button>
   {/each}
-  <Countdown
-    value={timeToSelectAnswer}
-    bind:this={timer}
-    on:expire={() => endGame(Outcomes.TIME_EXPIRED)} />
+  <Countdown value={timeToSelectAnswer} bind:this={timer} on:expire={() => endGame(Outcomes.TIME_EXPIRED)} />
   <hr />
-  {#each Object.entries(helpOptions) as [key, { available, handler, displayName }]}
-    <button
-      on:click={handler}
-      disabled={!available}
-      id={key}>{displayName}</button>
-  {/each}
+  <!-- {#each Object.entries(helpOptions) as [key, { available, handler, displayName }]}
+    <button on:click={handler} disabled={!available} id={key}>{displayName}</button>
+  {/each} -->
 </div>

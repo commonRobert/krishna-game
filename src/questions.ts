@@ -2,13 +2,10 @@ import { randomElement } from "./util";
 
 export type Question = {
   id: number;
-  questionText: string;
-  correctAnswerId: number;
   difficulty: number;
-  answerChoices: {
-    id: number;
-    value: string;
-  }[];
+  questionText: string;
+  correctAnswer: string;
+  incorrectOptions: string[];
   comment: string;
 };
 

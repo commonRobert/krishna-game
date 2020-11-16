@@ -1,12 +1,13 @@
 # Backlog
 
 - General
-  - proper layout and styles
+  - **proper layout and styles**
   - ~~complete question set structure and data flow~~
   - **add ranking**
 - InGame
   - ~~add question timer~~
   - ~~add 50/50~~
+  - shuffle answer choices each time
   - add game progresion bar
   - add call?
   - add audience help?

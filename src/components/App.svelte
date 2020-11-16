@@ -9,7 +9,7 @@
   import { fetchQuestions } from "../spreadsheetApi";
   import { questionsInGame } from "../gameSettings";
 
-  const defaultSheet = "БГ 1-6";
+  const defaultSheet = "Бхагавад-гита 1-6";
 
   onMount(async () => {
     $questionSets = {
