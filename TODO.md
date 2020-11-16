@@ -6,7 +6,7 @@
   - **add ranking**
 - InGame
   - ~~add question timer~~
-  - add 50/50
+  - ~~add 50/50~~
   - add game progresion bar
   - add call?
   - add audience help?
@@ -15,5 +15,5 @@
   - add description/About?
 - PostGame
   - ~~add last question info on loss~~
-  - add play again button
+  - add play again button?
   - add change question set button?
