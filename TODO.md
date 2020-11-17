@@ -7,7 +7,7 @@
 - InGame
   - ~~add question timer~~
   - ~~add 50/50~~
-  - shuffle answer choices each time
+  - ~~shuffle answer choices each time~~
   - add game progresion bar
   - add call?
   - add audience help?
