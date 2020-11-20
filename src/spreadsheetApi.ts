@@ -1,12 +1,16 @@
 import type { Question } from "./questions";
 
 const API_KEY = "AIzaSyArSjo348Lbj37Njn-o8baYQ_p4CsAQXSA";
-const prodSpreadsheetId = "1bKQJpX9-sXuFIKyquUp30cLYGhPtmvnQPQn9jzWidEY"; // PROD https://docs.google.com/spreadsheets/d/1bKQJpX9-sXuFIKyquUp30cLYGhPtmvnQPQn9jzWidEY/edit#gid=0
-const testSpreadsheetId = "1Q9ahcYfATyr3JQXze1ogHaOBJJLajnTRf5UpHuM8tPA"; // TEST https://docs.google.com/spreadsheets/d/1bKQJpX9-1Q9ahcYfATyr3JQXze1ogHaOBJJLajnTRf5UpHuM8tPA/edit#gid=0
+
+const questionSpreadsheets = {
+  test: "1Q9ahcYfATyr3JQXze1ogHaOBJJLajnTRf5UpHuM8tPA", // https://docs.google.com/spreadsheets/d/1bKQJpX9-1Q9ahcYfATyr3JQXze1ogHaOBJJLajnTRf5UpHuM8tPA/edit#gid=0
+  staging: "1bKQJpX9-sXuFIKyquUp30cLYGhPtmvnQPQn9jzWidEY", // https://docs.google.com/spreadsheets/d/1bKQJpX9-sXuFIKyquUp30cLYGhPtmvnQPQn9jzWidEY/edit#gid=0
+  production: "1sbUus9VPcg22SZucx3bzmWsXBERRguiwsh168MgfKVM", // https://docs.google.com/spreadsheets/d/1sbUus9VPcg22SZucx3bzmWsXBERRguiwsh168MgfKVM/edit#gid=0
+};
 
 // https://developers.google.com/sheets/api/reference/rest
 
-const reqUrl = (range, spreadsheetId = prodSpreadsheetId) =>
+const reqUrl = (range, spreadsheetId = questionSpreadsheets.production) =>
   `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${API_KEY}`;
 
 const sheetColumns: { [k in keyof Partial<Question>]: number | number[] } = {
