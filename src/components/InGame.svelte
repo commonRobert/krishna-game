@@ -12,14 +12,17 @@
   let currentQuestionNumber = 1;
   let timer, currentQuestion, answerChoices;
 
-  $: {
-    currentQuestion = selectedQuestions[currentQuestionNumber - 1];
-    answerChoices = shuffle([...currentQuestion.incorrectOptions, currentQuestion.correctAnswer]);
-  }
+  $: currentQuestion = selectedQuestions[currentQuestionNumber - 1];
+  $: answerChoices = shuffle([
+    ...currentQuestion.incorrectOptions,
+    currentQuestion.correctAnswer,
+  ]);
 
   const handleChoice = (e) => {
-    if (currentQuestion.correctAnswer !== e.target.textContent) return endGame(Outcomes.INCORRECT_ANSWER);
-    if (currentQuestionNumber === selectedQuestions.length) return endGame(Outcomes.WIN);
+    if (currentQuestion.correctAnswer !== e.target.textContent)
+      return endGame(Outcomes.INCORRECT_ANSWER);
+    if (currentQuestionNumber === selectedQuestions.length)
+      return endGame(Outcomes.WIN);
 
     currentQuestionNumber += 1;
     timer.reset(timeToSelectAnswer);
@@ -29,7 +32,9 @@
     fiftyFifty: {
       displayName: "50/50",
       handler() {
-        currentQuestion.incorrectOptions = [randomElement(currentQuestion.incorrectOptions)];
+        currentQuestion.incorrectOptions = [
+          randomElement(currentQuestion.incorrectOptions),
+        ];
         helpOptions.fiftyFifty.available = false;
       },
       available: true,
@@ -77,10 +82,18 @@
 <div>
   <pre>Вопрос #{currentQuestionNumber}</pre>
   <pre>{currentQuestion.questionText}</pre>
-  {#each answerChoices as choice}<button on:click={handleChoice}>{choice}</button>{/each}
-  <Countdown value={timeToSelectAnswer} bind:this={timer} on:expire={() => endGame(Outcomes.TIME_EXPIRED)} />
+  {#each answerChoices as choice}
+    <button on:click={handleChoice}>{choice}</button>
+  {/each}
+  <Countdown
+    value={timeToSelectAnswer}
+    bind:this={timer}
+    on:expire={() => endGame(Outcomes.TIME_EXPIRED)} />
   <hr />
   {#each Object.entries(helpOptions) as [key, { available, handler, displayName }]}
-    <button on:click={handler} disabled={!available} id={key}>{displayName}</button>
+    <button
+      on:click={handler}
+      disabled={!available}
+      id={key}>{displayName}</button>
   {/each}
 </div>
