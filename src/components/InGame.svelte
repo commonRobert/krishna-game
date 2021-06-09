@@ -10,6 +10,7 @@
   export let selectedQuestions: Question[];
 
   let currentQuestionNumber = 1;
+  let score = 0;
   let timer, currentQuestion, answerChoices;
 
   $: currentQuestion = selectedQuestions[currentQuestionNumber - 1];
@@ -19,8 +20,9 @@
   ]);
 
   const handleChoice = (e) => {
-    if (currentQuestion.correctAnswer !== e.target.textContent)
-      return endGame(Outcomes.INCORRECT_ANSWER);
+    if (currentQuestion.correctAnswer === e.target.textContent)
+      score += 1;
+      // return endGame(Outcomes.INCORRECT_ANSWER);
     if (currentQuestionNumber === selectedQuestions.length)
       return endGame(Outcomes.WIN);
 
@@ -51,15 +53,17 @@
 
     switch (outcome) {
       case Outcomes.WIN:
-        details = { win: true };
+        details = { win: true,
+        score: score,
+        gameLength: selectedQuestions.length };
         break;
-      case Outcomes.INCORRECT_ANSWER:
-        details = {
-          win: false,
-          failedQuestion: currentQuestion,
-          questionNumber: currentQuestionNumber,
-        };
-        break;
+      // case Outcomes.INCORRECT_ANSWER:
+      //   details = {
+      //     win: false,
+      //     failedQuestion: currentQuestion,
+      //     questionNumber: currentQuestionNumber,
+      //   };
+      //   break;
       case Outcomes.TIME_EXPIRED:
         details = {
           win: false,

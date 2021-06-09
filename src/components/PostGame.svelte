@@ -12,6 +12,7 @@
 
 {#if gameResult.win}
   <pre>Джай, победа!</pre>
+  <pre>Ваш результат {gameResult.score} из {gameResult.gameLength}</pre>
 {:else}
   <pre>Поражение...</pre>
   <pre>Вы ошиблись на вопросе #{gameResult.questionNumber}: "{gameResult.failedQuestion.questionText}"</pre>
