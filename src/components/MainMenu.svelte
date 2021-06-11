@@ -51,12 +51,28 @@
 />
 
 <br />
-
-{#each questionSetNames as name}
-  <button on:click={startGame} disabled={$playerName.length === 0}
-    >{name}</button
-  >
-{/each}
+<div>
+  {#each questionSetNames as name}
+    <button on:click={startGame} disabled={$playerName.length === 0}
+      >{name}</button
+    >
+  {/each}
+</div>
 
 <style>
+  div {
+    flex-wrap: wrap;
+    max-width: 240px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  button {
+    width: 100px;
+    margin-right: 16px;
+    margin-top: 12px;
+  }
+  input {
+    width: 220px;
+    margin-right: 16px;
+  }
 </style>

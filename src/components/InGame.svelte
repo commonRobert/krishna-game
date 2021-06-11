@@ -53,10 +53,14 @@
 </script>
 
 <div>
-  <pre>Вопрос #{currentQuestionNumber}</pre>
-  <pre>{currentQuestion.questionText}</pre>
+  <p class="withColor">
+    Вопрос #{currentQuestionNumber} из {selectedQuestions.length}
+  </p>
+  <p>{currentQuestion.questionText}</p>
   {#each answerChoices as choice}
-    <button on:click={handleChoice}>{choice}</button>
+    <ul>
+      <button on:click={handleChoice}>{choice}</button>
+    </ul>
   {/each}
   <Countdown
     value={timeToSelectAnswer}
@@ -72,7 +76,27 @@
 </div>
 
 <style>
-  pre {
+  p.withColor {
     color: orange;
+    flex-wrap: wrap;
+  }
+  p {
+    font-size: 20px;
+    margin-block-start: 0px;
+  }
+  div {
+    flex-wrap: wrap;
+    max-width: 240px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  ul {
+    padding-inline-start: 0px;
+    margin-block-end: 0px;
+    margin-block-start: 0px;
+  }
+  button {
+    width: 240px;
+    font-size: 16px;
   }
 </style>
