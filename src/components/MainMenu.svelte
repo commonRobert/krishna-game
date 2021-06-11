@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { questionSets } from "../stores";
-  import { createEventDispatcher } from "svelte";
+  import { chapterPlayed, playerName } from "../stores";
+  import { createEventDispatcher, onMount } from "svelte";
   import { fetchQuestions } from "../spreadsheetApi";
 
   const dispatch = createEventDispatcher();
@@ -25,19 +25,37 @@
     "18 глава",
   ];
 
-  let loadingQuestions = false;
-
   const startGame = async (e) => {
     const questionSet = await fetchQuestions(e.target.textContent);
+    $chapterPlayed = e.target.textContent;
 
     dispatch("startGame", {
       questionSet,
     });
   };
+
+  let playerNameInput;
+  onMount(() => {
+    if ($playerName.length === 0) {
+      playerNameInput.focus();
+    }
+  });
 </script>
 
+<input
+  type="text"
+  name="playerName"
+  placeholder="Ваше Имя"
+  bind:value={$playerName}
+  bind:this={playerNameInput}
+/>
+
+<br />
+
 {#each questionSetNames as name}
-  <button on:click={startGame}>{name}</button>
+  <button on:click={startGame} disabled={$playerName.length === 0}
+    >{name}</button
+  >
 {/each}
 
 <style>

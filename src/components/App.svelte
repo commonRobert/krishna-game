@@ -3,6 +3,8 @@
   import InGame from "./InGame.svelte";
   import PostGame from "./PostGame.svelte";
   import type { Question } from "../questions";
+  import { chapterPlayed, playerName } from "../stores";
+  import { reportResult } from "../spreadsheetApi";
 
   type GameStage = "MAIN-MENU" | "IN-GAME" | "POST-GAME";
   let gameStage: GameStage = "MAIN-MENU";
@@ -17,6 +19,12 @@
   const endGame = ({ detail }) => {
     gameResult = detail;
     gameStage = "POST-GAME";
+
+    reportResult({
+      playerName: $playerName,
+      chapterPlayed: $chapterPlayed,
+      ...detail,
+    });
   };
 </script>
 

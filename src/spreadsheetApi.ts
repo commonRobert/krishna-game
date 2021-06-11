@@ -7,11 +7,14 @@ const questionSpreadsheets = {
   staging: "1bKQJpX9-sXuFIKyquUp30cLYGhPtmvnQPQn9jzWidEY", // https://docs.google.com/spreadsheets/d/1bKQJpX9-sXuFIKyquUp30cLYGhPtmvnQPQn9jzWidEY/edit#gid=0
   production: "1sbUus9VPcg22SZucx3bzmWsXBERRguiwsh168MgfKVM", // https://docs.google.com/spreadsheets/d/1sbUus9VPcg22SZucx3bzmWsXBERRguiwsh168MgfKVM/edit#gid=0
   exam: "1bKQJpX9-sXuFIKyquUp30cLYGhPtmvnQPQn9jzWidEY",// https://docs.google.com/spreadsheets/d/1bKQJpX9-sXuFIKyquUp30cLYGhPtmvnQPQn9jzWidEY/edit#gid=0
+  results: "1o1fndHj3lLi6kakvu1F2bt-gscnsp024s0eSGd2XQSE"
 };
 
 // https://developers.google.com/sheets/api/reference/rest
 
-const reqUrl = (range, spreadsheetId = questionSpreadsheets.exam) =>
+const appendUrl = (range, spreadsheetId = questionSpreadsheets.results) =>
+  `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}:append?key=${API_KEY}`;
+const getUrl = (range, spreadsheetId = questionSpreadsheets.exam) =>
   `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${API_KEY}`;
 
 const sheetColumns: { [k in keyof Partial<Question>]: number | number[] } = {
@@ -46,6 +49,20 @@ const parseQuestions = (sheetData): Question[] =>
     );
 
 export const fetchQuestions = async (sheetName, numberOfQuestions = 999) => {
-  const res = await fetch(reqUrl(makeCellRange(sheetName, numberOfQuestions)));
+  const res = await fetch(getUrl(makeCellRange(sheetName, numberOfQuestions)));
   return parseQuestions(await res.json());
 };
+
+export const reportResult = ({ playerName, chapterPlayed, score, gameLength }) => {
+  const res = fetch(appendUrl('Sheet1'), {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      majorDimension: "ROWS",
+      range: 'Sheet1',
+      values: [Date().toString(), playerName, chapterPlayed, score, gameLength]
+    })
+  });
+}
