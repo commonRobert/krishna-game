@@ -4,7 +4,7 @@
   import PostGame from "./PostGame.svelte";
   import type { Question } from "../questions";
   import { chapterPlayed, playerName } from "../stores";
-  import { reportResult } from "../spreadsheetApi";
+  import { publishResult } from "../resultsApi";
 
   type GameStage = "MAIN-MENU" | "IN-GAME" | "POST-GAME";
   let gameStage: GameStage = "MAIN-MENU";
@@ -20,7 +20,7 @@
     gameResult = detail;
     gameStage = "POST-GAME";
 
-    reportResult({
+    publishResult({
       playerName: $playerName,
       chapterPlayed: $chapterPlayed,
       ...detail,
