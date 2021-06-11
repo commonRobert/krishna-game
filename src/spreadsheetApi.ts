@@ -6,24 +6,26 @@ const questionSpreadsheets = {
   test: "1Q9ahcYfATyr3JQXze1ogHaOBJJLajnTRf5UpHuM8tPA", // https://docs.google.com/spreadsheets/d/1bKQJpX9-1Q9ahcYfATyr3JQXze1ogHaOBJJLajnTRf5UpHuM8tPA/edit#gid=0
   staging: "1bKQJpX9-sXuFIKyquUp30cLYGhPtmvnQPQn9jzWidEY", // https://docs.google.com/spreadsheets/d/1bKQJpX9-sXuFIKyquUp30cLYGhPtmvnQPQn9jzWidEY/edit#gid=0
   production: "1sbUus9VPcg22SZucx3bzmWsXBERRguiwsh168MgfKVM", // https://docs.google.com/spreadsheets/d/1sbUus9VPcg22SZucx3bzmWsXBERRguiwsh168MgfKVM/edit#gid=0
+  exam: "1bKQJpX9-sXuFIKyquUp30cLYGhPtmvnQPQn9jzWidEY",// https://docs.google.com/spreadsheets/d/1bKQJpX9-sXuFIKyquUp30cLYGhPtmvnQPQn9jzWidEY/edit#gid=0
 };
 
 // https://developers.google.com/sheets/api/reference/rest
 
-const reqUrl = (range, spreadsheetId = questionSpreadsheets.production) =>
+const reqUrl = (range, spreadsheetId = questionSpreadsheets.exam) =>
   `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${API_KEY}`;
 
 const sheetColumns: { [k in keyof Partial<Question>]: number | number[] } = {
-  difficulty: 0,
-  questionText: 1,
-  correctAnswer: 2,
-  incorrectOptions: [3, 4, 5],
-  comment: 6,
+  difficulty: 1,
+  questionText: 2,
+  correctAnswer: 3,
+  incorrectOptions: [4, 5, 6],
+  comment: 7,
 };
 const columnIndexes = Object.values(sheetColumns).flat();
 
 const latinAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const firstColumnName = latinAlphabet[Math.min(...columnIndexes)];
+//const firstColumnName = latinAlphabet[Math.min(...columnIndexes)];
+const firstColumnName = 'A';
 const lastColumnName = latinAlphabet[Math.max(...columnIndexes)];
 
 const makeCellRange = (sheetName, numberOfQuestions, startRow = 2) =>

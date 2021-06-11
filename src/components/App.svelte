@@ -1,21 +1,8 @@
 <script lang="ts">
-  import { questionSets } from "../stores";
   import MainMenu from "./MainMenu.svelte";
   import InGame from "./InGame.svelte";
   import PostGame from "./PostGame.svelte";
-  import { onMount } from "svelte";
-  import { selectQuestionsForGame } from "../questions";
   import type { Question } from "../questions";
-  import { fetchQuestions } from "../spreadsheetApi";
-  import { questionsInGame } from "../gameSettings";
-
-  const defaultSheet = "Бхагавад-гита 1-6";
-
-  onMount(async () => {
-    $questionSets = {
-      default: selectQuestionsForGame(await fetchQuestions(defaultSheet), questionsInGame, []), // TODO: manage the played questions
-    };
-  });
 
   type GameStage = "MAIN-MENU" | "IN-GAME" | "POST-GAME";
   let gameStage: GameStage = "MAIN-MENU";
@@ -24,7 +11,7 @@
   let gameResult;
 
   const startGame = ({ detail }) => {
-    selectedQuestions = $questionSets.default;
+    selectedQuestions = detail.questionSet;
     gameStage = "IN-GAME";
   };
   const endGame = ({ detail }) => {
@@ -32,6 +19,16 @@
     gameStage = "POST-GAME";
   };
 </script>
+
+<main>
+  {#if gameStage === "IN-GAME"}
+    <InGame {selectedQuestions} on:endGame={endGame} />
+  {:else if gameStage === "POST-GAME"}
+    <PostGame {gameResult} on:playAgain={() => (gameStage = "MAIN-MENU")} />
+  {:else}
+    <MainMenu on:startGame={startGame} />
+  {/if}
+</main>
 
 <style>
   main {
@@ -54,13 +51,3 @@
     }
   }
 </style>
-
-<main>
-  {#if gameStage === 'IN-GAME'}
-    <InGame {selectedQuestions} on:endGame={endGame} />
-  {:else if gameStage === 'POST-GAME'}
-    <PostGame {gameResult} on:playAgain={startGame} />
-  {:else}
-    <MainMenu on:startGame={startGame} />
-  {/if}
-</main>
