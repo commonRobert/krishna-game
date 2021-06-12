@@ -14,16 +14,12 @@
   let timer, currentQuestion, answerChoices;
 
   $: currentQuestion = selectedQuestions[currentQuestionNumber - 1];
-  $: answerChoices = shuffle([
-    ...currentQuestion.incorrectOptions,
-    currentQuestion.correctAnswer,
-  ]);
+  $: answerChoices = shuffle([...currentQuestion.incorrectOptions, currentQuestion.correctAnswer]);
 
-  const handleChoice = (e) => {
-    if (currentQuestion.correctAnswer === e.target.textContent) score += 1;
+  const handleChoice = (choiceText) => {
+    if (currentQuestion.correctAnswer === choiceText) score += 1;
     // return endGame(Outcomes.INCORRECT_ANSWER);
-    if (currentQuestionNumber === selectedQuestions.length)
-      return endGame(Outcomes.WIN);
+    if (currentQuestionNumber === selectedQuestions.length) return endGame(Outcomes.WIN);
 
     currentQuestionNumber += 1;
     timer.reset(timeToSelectAnswer);
@@ -33,9 +29,7 @@
     fiftyFifty: {
       displayName: "50/50",
       handler() {
-        currentQuestion.incorrectOptions = [
-          randomElement(currentQuestion.incorrectOptions),
-        ];
+        currentQuestion.incorrectOptions = [randomElement(currentQuestion.incorrectOptions)];
         helpOptions.fiftyFifty.available = false;
       },
       available: true,
@@ -59,19 +53,13 @@
   <p>{currentQuestion.questionText}</p>
   {#each answerChoices as choice}
     <ul>
-      <button on:click={handleChoice}>{choice}</button>
+      <button on:click={(e) => handleChoice(e.currentTarget.textContent)}>{choice}</button>
     </ul>
   {/each}
-  <Countdown
-    value={timeToSelectAnswer}
-    bind:this={timer}
-    on:expire={() => endGame(Outcomes.TIME_EXPIRED)}
-  />
+  <Countdown value={timeToSelectAnswer} bind:this={timer} on:expire={() => handleChoice(null)} />
   <hr />
   {#each Object.entries(helpOptions) as [key, { available, handler, displayName }]}
-    <button on:click={handler} disabled={!available} id={key}
-      >{displayName}</button
-    >
+    <button on:click={handler} disabled={!available} id={key}>{displayName}</button>
   {/each}
 </div>
 

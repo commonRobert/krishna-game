@@ -3,7 +3,7 @@
   import InGame from "./InGame.svelte";
   import PostGame from "./PostGame.svelte";
   import type { Question } from "../questions";
-  import { chapterPlayed, playerName } from "../stores";
+  import { chapterPlayed, playerName, publishResultOn } from "../stores";
   import { publishResult } from "../resultsApi";
 
   type GameStage = "MAIN-MENU" | "IN-GAME" | "POST-GAME";
@@ -20,11 +20,13 @@
     gameResult = detail;
     gameStage = "POST-GAME";
 
-    publishResult({
-      playerName: $playerName,
-      chapterPlayed: $chapterPlayed,
-      ...detail,
-    });
+    if ($publishResultOn) {
+      publishResult({
+        playerName: $playerName,
+        chapterPlayed: $chapterPlayed,
+        ...detail,
+      });
+    }
   };
 </script>
 

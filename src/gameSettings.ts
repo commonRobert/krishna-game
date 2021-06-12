@@ -1,2 +1,2 @@
 export const questionsInGame = 8;
-export const timeToSelectAnswer = 30;
+export const timeToSelectAnswer = 60;

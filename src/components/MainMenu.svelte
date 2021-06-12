@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { chapterPlayed, playerName } from "../stores";
+  import { chapterPlayed, playerName, publishResultOn } from "../stores";
   import { createEventDispatcher, onMount } from "svelte";
   import { fetchQuestions } from "../spreadsheetApi";
 
@@ -45,22 +45,35 @@
 <input
   type="text"
   name="playerName"
+  id="playerName"
   placeholder="Ваше Имя"
   bind:value={$playerName}
   bind:this={playerNameInput}
 />
 
+<div id="publish">
+  <input type="checkbox" name="publishResult" id="publishResult" checked={$publishResultOn} />
+  <label for="publishResult">Опубликовать результат</label>
+</div>
+
 <br />
-<div>
+<div id="chapters">
   {#each questionSetNames as name}
-    <button on:click={startGame} disabled={$playerName.length === 0}
-      >{name}</button
-    >
+    <button on:click={startGame} disabled={$playerName.length === 0}>{name}</button>
   {/each}
 </div>
 
 <style>
   div {
+    margin: 0 auto;
+  }
+  label {
+    display: inline;
+  }
+  div#publish {
+    margin-top: 8px;
+  }
+  div#chapters {
     flex-wrap: wrap;
     max-width: 240px;
     margin: 0 auto;
@@ -71,7 +84,7 @@
     margin-right: 16px;
     margin-top: 12px;
   }
-  input {
+  input#playerName {
     width: 220px;
     margin-right: 16px;
   }
