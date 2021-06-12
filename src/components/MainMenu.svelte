@@ -25,7 +25,10 @@
     "18 глава",
   ];
 
+  let chapterSelected = false;
+
   const startGame = async (e) => {
+    chapterSelected = true;
     const questionSet = await fetchQuestions(e.target.textContent);
     $chapterPlayed = e.target.textContent;
 
@@ -52,14 +55,14 @@
 />
 
 <div id="publish">
-  <input type="checkbox" name="publishResult" id="publishResult" checked={$publishResultOn} />
+  <input type="checkbox" name="publishResult" id="publishResult" bind:checked={$publishResultOn} />
   <label for="publishResult">Опубликовать результат</label>
 </div>
 
 <br />
 <div id="chapters">
   {#each questionSetNames as name}
-    <button on:click={startGame} disabled={$playerName.length === 0}>{name}</button>
+    <button on:click={startGame} disabled={chapterSelected || $playerName.length === 0}>{name}</button>
   {/each}
 </div>
 
