@@ -45,6 +45,10 @@
   });
 </script>
 
+<h1>
+  Экзаменационный тест по "Бхагавад-гите, как она есть" Его Божественной Милости АЧ Бхактиведанты Свами Прабхупады
+</h1>
+
 <input
   type="text"
   name="playerName"
@@ -59,7 +63,6 @@
   <label for="publishResult">Опубликовать результат</label>
 </div>
 
-<br />
 <div id="chapters">
   {#each questionSetNames as name}
     <button on:click={startGame} disabled={chapterSelected || $playerName.length === 0}>{name}</button>
@@ -67,14 +70,17 @@
 </div>
 
 <style>
-  div {
-    margin: 0 auto;
+  h1 {
+    color: orange;
+    font-size: 18px;
+    margin-bottom: 20px;
   }
   label {
     display: inline;
   }
   div#publish {
     margin-top: 8px;
+    margin-bottom: 12px;
   }
   div#chapters {
     flex-wrap: wrap;
