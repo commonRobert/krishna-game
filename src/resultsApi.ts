@@ -1,7 +1,7 @@
 export const publishResult = async ({ playerName, chapterPlayed, score, gameLength }) => {
   const currentResults = (await getResults()).result.content;
   const newResult = currentResults.concat([
-    { tag: "p", children: [`${playerName} | ${chapterPlayed} | ${score} из ${gameLength}`] },
+    { tag: "p", children: [`${new Date().toLocaleString()} | ${playerName} | ${chapterPlayed} | ${score} из ${gameLength}`] },
   ]);
 
   // const base = [{ tag: "b", children: [`Имя Студента | Глава | Правильных Ответов`] }, { tag: "br" }];
