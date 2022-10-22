@@ -71,7 +71,7 @@
 
 <style>
   h1 {
-    color: orange;
+    color: darkorange;
     font-size: 18px;
     margin-bottom: 20px;
   }

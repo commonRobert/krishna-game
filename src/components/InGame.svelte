@@ -47,10 +47,10 @@
 </script>
 
 <div>
-  <p class="withColor">
-    Вопрос #{currentQuestionNumber} из {selectedQuestions.length}
+  <p class="colored">
+    Вопрос {currentQuestionNumber} из {selectedQuestions.length}
   </p>
-  <p>{currentQuestion.questionText}</p>
+  <h4>{currentQuestion.questionText}</h4>
   {#each answerChoices as choice}
     <ul>
       <button on:click={(e) => handleChoice(e.currentTarget.textContent)}>{choice}</button>
@@ -64,17 +64,12 @@
 </div>
 
 <style>
-  p.withColor {
-    color: orange;
-    flex-wrap: wrap;
-  }
-  p {
-    font-size: 20px;
-    margin-block-start: 0px;
+  .colored {
+    color: darkorange;
   }
   div {
     flex-wrap: wrap;
-    max-width: 240px;
+    /* max-width: 240px; */
     margin: 0 auto;
     text-align: center;
   }
@@ -86,5 +81,8 @@
   button {
     width: 240px;
     font-size: 16px;
+  }
+  hr {
+    width: 240px;
   }
 </style>

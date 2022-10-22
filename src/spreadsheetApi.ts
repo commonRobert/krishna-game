@@ -26,14 +26,15 @@ const columnIndexes = Object.values(sheetColumns).flat();
 const latinAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 //const firstColumnName = latinAlphabet[Math.min(...columnIndexes)];
 const firstColumnName = "A";
-const lastColumnName = latinAlphabet[Math.max(...columnIndexes)];
+const maxColumnIndex = Math.max(...columnIndexes);
+const lastColumnName = latinAlphabet[maxColumnIndex];
 
 const makeCellRange = (sheetName, numberOfQuestions, startRow = 2) =>
   `${sheetName}!${firstColumnName}${startRow}:${lastColumnName}${startRow + numberOfQuestions}`;
 
 const parseQuestions = (sheetData): Question[] =>
   sheetData.values
-    .filter((row) => row.length >= Math.max(...columnIndexes)) // The the comment is optional
+    .filter((row) => row.length >= maxColumnIndex) // The comment is optional
     .map((question, questionIndex) =>
       Object.entries(sheetColumns).reduce(
         (acc, [colName, colIndex]) => {
