@@ -11,7 +11,7 @@ const questionSpreadsheets = {
 
 // https://developers.google.com/sheets/api/reference/rest
 
-const getUrl = (range, spreadsheetId = questionSpreadsheets.exam) =>
+const sheetUrl = (range, spreadsheetId = questionSpreadsheets.exam) =>
   `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${API_KEY}`;
 
 const sheetColumns: { [k in keyof Partial<Question>]: number | number[] } = {
@@ -47,6 +47,6 @@ const parseQuestions = (sheetData): Question[] =>
     );
 
 export const fetchQuestions = async (sheetName, numberOfQuestions = 999) => {
-  const res = await fetch(getUrl(makeCellRange(sheetName, numberOfQuestions)));
+  const res = await fetch(sheetUrl(makeCellRange(sheetName, numberOfQuestions)));
   return parseQuestions(await res.json());
 };

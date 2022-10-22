@@ -53,7 +53,7 @@
   <h4>{currentQuestion.questionText}</h4>
   {#each answerChoices as choice}
     <ul>
-      <button on:click={(e) => handleChoice(e.currentTarget.textContent)}>{choice}</button>
+      <button on:click={(e) => handleChoice(e.currentTarget.textContent)}>{choice.trim() || "???"}</button>
     </ul>
   {/each}
   <Countdown value={timeToSelectAnswer} bind:this={timer} on:expire={() => handleChoice(null)} />
