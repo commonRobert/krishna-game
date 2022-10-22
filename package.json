@@ -9,8 +9,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d public"
+    "predeploy": "npm run build -- --base=/krishna-game/",
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.2",
