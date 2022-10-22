@@ -15,7 +15,7 @@
   };
 
   const tick = () => {
-    if (value === stopAt) return dispatch("expire");
+    if (value <= stopAt) return dispatch("expire");
     value -= 1;
   };
 
