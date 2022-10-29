@@ -8,6 +8,10 @@
   export let blinkAt = 5;
   export let stopAt = 1;
 
+  export const stop = () => {
+    interval && clearInterval(interval);
+  }
+
   export const reset = (newValue) => {
     clearInterval(interval);
     value = newValue;
@@ -15,8 +19,8 @@
   };
 
   const tick = () => {
-    if (value <= stopAt) return dispatch("expire");
     value -= 1;
+    if (value < stopAt) return dispatch("expire");
   };
 
   // TODO: Why does it carry over the ticking interval when the component is rerendered?

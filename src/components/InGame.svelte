@@ -16,14 +16,26 @@
   $: currentQuestion = selectedQuestions[currentQuestionNumber - 1];
   $: answerChoices = shuffle([...currentQuestion.incorrectOptions, currentQuestion.correctAnswer]);
 
+  let choiceMade = false;
+
+  const isCorrectAnswer = (answerText) => currentQuestion.correctAnswer === answerText;
+
   const handleChoice = (choiceText) => {
-    if (currentQuestion.correctAnswer === choiceText) score += 1;
-    // return endGame(Outcomes.INCORRECT_ANSWER);
+    timer.stop();
+    choiceMade = true;
+
+    if (isCorrectAnswer(choiceText))  {
+      score += 1;
+    }
+  };
+
+  const moveForward = () => {
     if (currentQuestionNumber === selectedQuestions.length) return endGame(Outcomes.WIN);
 
     currentQuestionNumber += 1;
     timer.reset(timeToSelectAnswer);
-  };
+    choiceMade = false;
+  }
 
   const helpOptions = {
     fiftyFifty: {
@@ -47,24 +59,25 @@
 </script>
 
 <div>
-  <p class="colored">
+  <p class="orange-text">
     Вопрос {currentQuestionNumber} из {selectedQuestions.length}
   </p>
   <h4>{currentQuestion.questionText}</h4>
   {#each answerChoices as choice}
     <ul>
-      <button on:click={(e) => handleChoice(e.currentTarget.textContent)}>{choice.trim() || "???"}</button>
+      <button class:correct-choice={choiceMade && isCorrectAnswer(choice)} disabled={choiceMade} on:click={e => handleChoice(choice)}>{choice.trim() || "???"}</button>
     </ul>
   {/each}
-  <Countdown value={timeToSelectAnswer} bind:this={timer} on:expire={() => handleChoice(null)} />
+  <Countdown value={timeToSelectAnswer} bind:this={timer} on:expire={handleChoice} />
+  <button disabled={!choiceMade} on:click={moveForward}>Дальше</button>
   <hr />
   {#each Object.entries(helpOptions) as [key, { available, handler, displayName }]}
-    <button on:click={handler} disabled={!available} id={key}>{displayName}</button>
+    <button on:click={handler} disabled={!available || choiceMade} id={key}>{displayName}</button>
   {/each}
 </div>
 
 <style>
-  .colored {
+  .orange-text {
     color: darkorange;
   }
   div {
@@ -81,6 +94,9 @@
   button {
     width: 240px;
     font-size: 16px;
+  }
+  .correct-choice {
+    background-color: green;
   }
   hr {
     width: 240px;
